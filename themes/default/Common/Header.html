@@ -1,0 +1,27 @@
+<div id="Header">
+	
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+var searchForm = function() {
+	$("input[name=keyword]").focus(function() {
+		if ($(this).val() == "搜索...") {
+			$(this).val("").css("color","#666");
+		}
+	}).blur(function() {
+		if (!$(this).val()) {
+			$(this).val("搜索...").css("color","#CCCCCC");
+		}
+	});
+
+	$("form[name=searchform]").submit(function() {
+		var keyword = $(this).find("input[name=keyword]").val();
+		if (!keyword || keyword=="搜索...") return false;
+
+		location.href = $(this).attr("action")+keyword;
+
+		return false;
+	});
+}();
+});
+</script>
