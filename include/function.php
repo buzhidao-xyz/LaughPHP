@@ -420,7 +420,7 @@ function T($table=null,$id='mysql')
 {
     global $DBOBJECTIVE;
     
-    $DBOBJECTIVE[$id]::$_table = $table ? $table : '';
+    $DBOBJECTIVE[$id]->_table = $table ? $table : '';
     
     return $DBOBJECTIVE[$id];
 }
@@ -434,7 +434,7 @@ function TW($table=null,$id='mysqlw')
 {
     global $DBOBJECTIVE;
     
-    $DBOBJECTIVE[$id]::$_table = $table ? $table : '';
+    $DBOBJECTIVE[$id]->_table = $table ? $table : '';
     
     return $DBOBJECTIVE[$id];
 }
@@ -448,7 +448,7 @@ function TR($table=null,$id='mysqlr')
 {
     global $DBOBJECTIVE;
     
-    $DBOBJECTIVE[$id]::$_table = $table ? $table : '';
+    $DBOBJECTIVE[$id]->_table = $table ? $table : '';
     
     return $DBOBJECTIVE[$id];
 }
@@ -460,7 +460,7 @@ function Mongo($collection=null,$id='mongo')
 {
     global $DBOBJECTIVE;
     
-    $DBOBJECTIVE[$id]::$_collection = $collection ? $collection : '';
+    $DBOBJECTIVE[$id]->_collection = $collection ? $collection : '';
     
     return $DBOBJECTIVE[$id];
 }
