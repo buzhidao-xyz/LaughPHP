@@ -30,18 +30,18 @@ class DBDriver implements DBDriver_Interface
     private $option;
 
     //DB连接对象
-    static protected $db;
+    protected $db;
     
     //insert update delete 所影响的记录数 默认值为0
-    static protected $_count = 0;
+    protected $_count = 0;
     
-    static protected $_prefix;   //表前缀
-    static protected $_tbf = "#@__";   //表缓存前缀
+    protected $_prefix;   //表前缀
+    protected $_tbf = "#@__";   //表缓存前缀
 
     //表名
-    static public $_table = '';
+    public $_table = '';
     //联合查询表
-    static public $_join_table = '';
+    public $_join_table = '';
 
     public function __construct($dbckey=null)
     {
@@ -167,9 +167,9 @@ class DBDriver implements DBDriver_Interface
     private function setTablePre()
     {
         try {
-            self::$_prefix = isset($this->dbs['prefix']) ? $this->dbs['prefix'] : null;
+            $this->_prefix = isset($this->dbs['prefix']) ? $this->dbs['prefix'] : null;
             
-            if (!trim(self::$_prefix) && self::$_prefix!==null) {
+            if (!trim($this->_prefix) && $this->_prefix!==null) {
                 throw new MyException("The Prefix can't be null", 1);
                 exit;
             }
@@ -199,18 +199,18 @@ class DBDriver implements DBDriver_Interface
     private function connect()
     {
         try {
-            self::$db = $this->_initConnect($this->host, $this->port, $this->username, $this->password, $this->database, $this->option);
+            $this->db = $this->_initConnect($this->host, $this->port, $this->username, $this->password, $this->database, $this->option);
         } catch(PDOException $e) {
             echo $e;
             die('DB Connect Error!');
         }
 
-        return self::$db;
+        return $this->db;
     }
 
-    static protected function tablePR($sql)
+    protected function tablePR($sql)
     {
-        return str_replace(self::$_tbf, self::$_prefix, $sql);
+        return str_replace($this->_tbf, $this->_prefix, $sql);
     }
 
     /************************************SQL对象分析************************************/
@@ -224,7 +224,7 @@ class DBDriver implements DBDriver_Interface
     protected function orm($key,$sepflag1="`",$sepflag2="`")
     {
         global $orm;
-        if (!$key) return $orm[self::$_table];
+        if (!$key) return $orm[$this->_table];
 
 
         $strAsArray = array(' as ',' As ',' aS ',' AS ');
@@ -238,10 +238,10 @@ class DBDriver implements DBDriver_Interface
             $pos = strpos($key, ' ');
             $alias = $pos !== false ? substr($key, $pos) : '';
             $key = $pos !== false ? substr($key, 0, $pos) : $key;
-            if (!is_array($orm) || empty($orm) || !array_key_exists(self::$_table, $orm) || !array_key_exists($key, $orm[self::$_table])) {
+            if (!is_array($orm) || empty($orm) || !array_key_exists($this->_table, $orm) || !array_key_exists($key, $orm[$this->_table])) {
                 return $alias ? 'a.'.$sepflag1.$key.$sepflag2." AS ".$sepflag1.$alias.$sepflag2 : 'a.'.$sepflag1.$key.$sepflag2;
             } else {
-                return $alias ? 'a.'.$sepflag1.$orm[self::$_table][$key].$sepflag2." AS ".$sepflag1.$alias.$sepflag2 : 'a.'.$sepflag1.$orm[self::$_table][$key].$sepflag2;
+                return $alias ? 'a.'.$sepflag1.$orm[$this->_table][$key].$sepflag2." AS ".$sepflag1.$alias.$sepflag2 : 'a.'.$sepflag1.$orm[$this->_table][$key].$sepflag2;
             }
         }
         if (preg_match("/^b\./", $key)) {
@@ -249,10 +249,10 @@ class DBDriver implements DBDriver_Interface
             $pos = strpos($key, ' ');
             $alias = $pos !== false ? substr($key, $pos) : '';
             $key = $pos !== false ? substr($key, 0, $pos) : $key;
-            if (!is_array($orm) || empty($orm) || !array_key_exists(self::$_join_table, $orm) || !array_key_exists($key, $orm[self::$_join_table])) {
+            if (!is_array($orm) || empty($orm) || !array_key_exists($this->_join_table, $orm) || !array_key_exists($key, $orm[$this->_join_table])) {
                 return $alias ? 'b.'.$sepflag1.$key.$sepflag2." AS ".$sepflag1.$alias.$sepflag2 : 'b.'.$sepflag1.$key.$sepflag2;
             } else {
-                return $alias ? 'b.'.$sepflag1.$orm[self::$_join_table][$key].$sepflag2." AS ".$sepflag1.$alias.$sepflag2 : 'b.'.$sepflag1.$orm[self::$_join_table][$key].$sepflag2;
+                return $alias ? 'b.'.$sepflag1.$orm[$this->_join_table][$key].$sepflag2." AS ".$sepflag1.$alias.$sepflag2 : 'b.'.$sepflag1.$orm[$this->_join_table][$key].$sepflag2;
             }
         }
 
@@ -260,10 +260,10 @@ class DBDriver implements DBDriver_Interface
         $pos = strpos($key, ' ');
         $alias = $pos !== false ? substr($key, $pos) : '';
         $key = $pos !== false ? substr($key, 0, $pos) : $key;
-        if (!is_array($orm) || empty($orm) || !array_key_exists(self::$_join_table, $orm) || !array_key_exists($key, $orm[self::$_join_table])) {
+        if (!is_array($orm) || empty($orm) || !array_key_exists($this->_join_table, $orm) || !array_key_exists($key, $orm[$this->_join_table])) {
             return $alias ? $sepflag1.$key.$sepflag2." AS ".$sepflag1.$alias.$sepflag2 : $sepflag1.$key.$sepflag2;
         } else {
-            return $alias ? $sepflag1.$orm[self::$_table][$key].$sepflag2." AS ".$sepflag1.$alias.$sepflag2 : $sepflag1.$orm[self::$_table][$key].$sepflag2;
+            return $alias ? $sepflag1.$orm[$this->_table][$key].$sepflag2." AS ".$sepflag1.$alias.$sepflag2 : $sepflag1.$orm[$this->_table][$key].$sepflag2;
         }
     }
 
@@ -438,7 +438,7 @@ class DBDriver implements DBDriver_Interface
      * @return 成功返回true 失败返回false
      * 子类必须实现此方法
      */
-    static public function Execute($sql)
+    public function Execute($sql)
     {
         return true;
     }
@@ -497,7 +497,7 @@ class DBDriver implements DBDriver_Interface
             }
         }
         
-        $this->sql = "INSERT INTO ".self::$_tbf.self::$_table." (".$keys.") VALUES (".$values.")";
+        $this->sql = "INSERT INTO ".$this->_tbf.$this->_table." (".$keys.") VALUES (".$values.")";
         if ($this->Execute($this->sql)) return $this->GetInsertID();
         else return false;
     }
@@ -540,7 +540,7 @@ class DBDriver implements DBDriver_Interface
             unset($keys); unset($values);
         }
         
-        $this->sql = "INSERT INTO ".self::$_tbf.self::$_table." ".$key." VALUES ".$value;
+        $this->sql = "INSERT INTO ".$this->_tbf.$this->_table." ".$key." VALUES ".$value;
 
         if ($this->Execute($this->sql)) return $this->GetInsertID();
         else return false;
@@ -553,7 +553,7 @@ class DBDriver implements DBDriver_Interface
     public function find($options=array())
     {
         $this->_before_sql($options);
-        $this->sql = "SELECT ".$this->_field." FROM ".self::$_tbf.self::$_table." as a ".$this->_join.$this->_where.$this->_order.$this->_limit;
+        $this->sql = "SELECT ".$this->_field." FROM ".$this->_tbf.$this->_table." as a ".$this->_join.$this->_where.$this->_order.$this->_limit;
         $this->_after_sql();
         $return = $this->GetOne($this->sql);
         return $return;
@@ -566,7 +566,7 @@ class DBDriver implements DBDriver_Interface
     public function select($options=array())
     {
         $this->_before_sql($options);
-        $this->sql = "SELECT ".$this->_field." FROM ".self::$_tbf.self::$_table." as a ".$this->_join.$this->_where.$this->_order.$this->_limit;
+        $this->sql = "SELECT ".$this->_field." FROM ".$this->_tbf.$this->_table." as a ".$this->_join.$this->_where.$this->_order.$this->_limit;
         $this->_after_sql();
         $return = $this->GetAll($this->sql);
         return $return;
@@ -621,21 +621,21 @@ class DBDriver implements DBDriver_Interface
     /************************************pdo事务处理************************************/
 
     //开始事务
-    static public function beginTransaction()
+    public function beginTransaction()
     {
-        self::$db->beginTransaction();
+        $this->db->beginTransaction();
     }
 
     //提交事务
-    static public function commitTransaction()
+    public function commitTransaction()
     {
-        self::$db->commit();
+        $this->db->commit();
     }
 
     //回滚事务
-    static public function rollBackTransaction()
+    public function rollBackTransaction()
     {
-        self::$db->rollBack();
+        $this->db->rollBack();
     }
     
     /**
@@ -643,14 +643,14 @@ class DBDriver implements DBDriver_Interface
      * @param 要执行的sql语句数组 多条sql事务处理
      * @return 返回值 true/false
      */
-    static public function Transaction($sql=array())
+    public function Transaction($sql=array())
     {
         if (!is_array($sql) || empty($sql)) return false;
-        $sql = self::tablePR($sql);
+        $sql = $this->tablePR($sql);
         
         $this->beginTransaction();
         foreach ($sql as $k=>$v) {
-            if (!self::$db->exec($sql)) {
+            if (!$this->db->exec($sql)) {
                 $this->rollBackTransaction();
                 return false;
             }
@@ -666,7 +666,7 @@ class DBDriver implements DBDriver_Interface
      */
     public function DBClose()
     {
-		self::$db = null;
+		$this->db = null;
 	}
 
     //获取sql语句 用于打印输出调试

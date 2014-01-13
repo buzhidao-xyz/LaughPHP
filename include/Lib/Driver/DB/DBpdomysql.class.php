@@ -21,7 +21,7 @@ class DBpdomysql extends DBDriver
     //sql语句
     protected $sql = null;
     
-    static protected $_sql;
+    protected $_sql;
 
     //调用父类初始化数据库连接
     public function __construct()
@@ -36,14 +36,16 @@ class DBpdomysql extends DBDriver
     {
         //pdo_mysql connect
         $dsn = "mysql:host=".$host.";port=".$port.";dbname=".$database;
-        if (!(@self::$db = new PDO($dsn, $username, $password))) {
+        if (!(@$this->db = new PDO($dsn, $username, $password))) {
             throw new PDOException("The connect is unvaliable", 1);
             exit;
-        };
-        self::Execute("SET NAMES UTF8");
+        }
+        $this->Execute("SET NAMES UTF8");
 
         //指定返回数据的格式化格式（带fieldname）
-        self::$db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_NAMED);
+        $this->db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_NAMED);
+
+        return $this->db;
     }
 
     /**
@@ -51,11 +53,11 @@ class DBpdomysql extends DBDriver
      * @param sql语句
      * @return 成功返回true 失败返回false
      */
-    static public function Execute($sql)
+    public function Execute($sql)
     {
-        $sql = self::tablePR($sql);
+        $sql = $this->tablePR($sql);
 
-        return self::$db->exec($sql) ? true : false;
+        return $this->db->exec($sql) ? true : false;
     }
 
     /**
@@ -63,11 +65,11 @@ class DBpdomysql extends DBDriver
      * @param $sql 要执行的sql语句
      * @return 执行语句所影响的记录数，为空返回0
      */
-    static public function GetCount($sql)
+    public function GetCount($sql)
     {
-        $sql = self::tablePR($sql);
+        $sql = $this->tablePR($sql);
 
-        $sth = self::$db->prepare($sql);
+        $sth = $this->db->prepare($sql);
         $sth->execute();
 
         return $sth->rowCount();
@@ -78,11 +80,11 @@ class DBpdomysql extends DBDriver
      * @param $sql 要执行的查询select语句
      * @return 结果集数组
      */
-    static public function GetOne($sql)
+    public function GetOne($sql)
     {
-        $sql = self::tablePR($sql);
+        $sql = $this->tablePR($sql);
 
-        $sth = self::$db->prepare($sql);
+        $sth = $this->db->prepare($sql);
         $sth->execute();
         
         return $sth->rowCount() ? $sth->fetch(0) : array();
@@ -93,11 +95,11 @@ class DBpdomysql extends DBDriver
      * @param $sql 要执行的查询select语句
      * @return 结果集数组
      */
-    static public function GetAll($sql)
+    public function GetAll($sql)
     {
-        $sql = self::tablePR($sql);
+        $sql = $this->tablePR($sql);
 
-        $sth = self::$db->prepare($sql);
+        $sth = $this->db->prepare($sql);
         $sth->execute();
 
         return $sth->rowCount() ? $sth->fetchAll() : array();
@@ -108,9 +110,9 @@ class DBpdomysql extends DBDriver
      * @param Null
      * @return id
      */
-    static public function GetInsertID()
+    public function GetInsertID()
     {
-        return self::$db->lastInsertId();
+        return $this->db->lastInsertId();
     }
 
     /************************************以上方法必须实现************************************/
@@ -123,7 +125,7 @@ class DBpdomysql extends DBDriver
     {
         $this->_before_sql($options);
 
-        $main_table = $this->_union ? $this->_union : self::$_tbf.self::$_table;
+        $main_table = $this->_union ? $this->_union : $this->_tbf.$this->_table;
         $this->sql = "SELECT ".$this->_field." FROM ".$main_table." as a ".$this->_join.$this->_where.$this->_group.$this->_order.$this->_limit;
         
         $this->_after_sql();
@@ -140,7 +142,7 @@ class DBpdomysql extends DBDriver
     {
         $this->_before_sql($options);
 
-        $main_table = $this->_union ? $this->_union : self::$_tbf.self::$_table;
+        $main_table = $this->_union ? $this->_union : $this->_tbf.$this->_table;
         $this->sql = "SELECT ".$this->_field." FROM ".$main_table." as a ".$this->_join.$this->_where.$this->_group.$this->_order.$this->_limit;
         
         $this->_after_sql();
@@ -156,11 +158,11 @@ class DBpdomysql extends DBDriver
     {
         $this->_before_sql($options);
 
-        $main_table = $this->_union ? $this->_union : self::$_tbf.self::$_table;
+        $main_table = $this->_union ? $this->_union : $this->_tbf.$this->_table;
         $this->sql = "SELECT COUNT(".$this->_field.") as ResultRowCount FROM ".$main_table." as a ".$this->_join.$this->_where.$this->_group;
-       
+
         $this->_after_sql();
-        
+
         $data = $this->GetOne($this->sql);
         return $data['ResultRowCount'];
     }
@@ -191,7 +193,7 @@ class DBpdomysql extends DBDriver
         }
         
         $this->_before_sql($options);
-        $this->sql = "UPDATE ".self::$_tbf.self::$_table." SET ".$ups.$this->_where;
+        $this->sql = "UPDATE ".$this->_tbf.$this->_table." SET ".$ups.$this->_where;
         $this->_after_sql();
         return $this->exec();
     }
@@ -202,7 +204,7 @@ class DBpdomysql extends DBDriver
     public function delete($options=array())
     {
         $this->_before_sql($options);
-        $this->sql = "DELETE FROM ".self::$_tbf.self::$_table." ".$this->_where.$this->_order.$this->_limit;
+        $this->sql = "DELETE FROM ".$this->_tbf.$this->_table." ".$this->_where.$this->_order.$this->_limit;
         $this->_after_sql();
         return $this->exec($this->sql);
     }
@@ -216,8 +218,8 @@ class DBpdomysql extends DBDriver
     {
         if (!$join) return $this;
         $joinArray = explode(" ", $join);
-        self::$_join_table = $joinArray[0] ? $joinArray[0] : $joinArray[1];
-        self::$_join_table = str_replace(self::$_tbf, '', self::$_join_table);
+        $this->_join_table = $joinArray[0] ? $joinArray[0] : $joinArray[1];
+        $this->_join_table = str_replace($this->_tbf, '', $this->_join_table);
 
         if (!$flag) {
             $join = ' LEFT JOIN '.$join.' ';
@@ -237,9 +239,9 @@ class DBpdomysql extends DBDriver
     public function union($table=null)
     {
         if (!$table) return $this;
-        $_union_table = self::$_tbf.$table;
+        $_union_table = $this->_tbf.$table;
 
-        $this->_union = ' (SELECT * FROM '.self::$_tbf.self::$_table.' UNION ALL SELECT * FROM '.$_union_table.') ';
+        $this->_union = ' (SELECT * FROM '.$this->_tbf.$this->_table.' UNION ALL SELECT * FROM '.$_union_table.') ';
 
         return $this;
     }
@@ -407,7 +409,7 @@ class DBpdomysql extends DBDriver
             }
         }
 
-        $this->sql = "SELECT ".$field.", MATCH(".$match.") AGAINST('".$value."' IN BOOLEAN MODE) AS score FROM ".self::$_tbf.self::$_table." WHERE MATCH(".$match.") AGAINST('".$value."' IN BOOLEAN MODE) ORDER BY score DESC ";
+        $this->sql = "SELECT ".$field.", MATCH(".$match.") AGAINST('".$value."' IN BOOLEAN MODE) AS score FROM ".$this->_tbf.$this->_table." WHERE MATCH(".$match.") AGAINST('".$value."' IN BOOLEAN MODE) ORDER BY score DESC ";
 
         return $this;
     }

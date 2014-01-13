@@ -21,7 +21,7 @@ class DBmysqli extends DBDriver
     //sql语句
     protected $sql = null;
     
-    static protected $_sql;
+    protected $_sql;
 
     //调用父类初始化数据库连接
     public function __construct()
@@ -35,11 +35,13 @@ class DBmysqli extends DBDriver
     public function _initConnect($host,$port,$username,$password,$database)
     {
         //mysqli connect
-        if (!(@self::$db = new mysqli($host, $username, $password, $database, $port))) {
+        if (!(@$this->db = new mysqli($host, $username, $password, $database, $port))) {
             throw new MyException("The connect is unvaliable", 1);
             exit;
         }
-        self::Execute("SET NAMES UTF8");
+        $this->Execute("SET NAMES UTF8");
+        
+        return $this->db;
     }
 
     /**
@@ -47,12 +49,12 @@ class DBmysqli extends DBDriver
      * @param sql语句
      * @return 成功返回true 失败返回false
      */
-    static public function Execute($sql)
+    public function Execute($sql)
     {
-        $sql = self::tablePR($sql);
+        $sql = $this->tablePR($sql);
 
-        self::$db->query($sql);
-        return self::$db->affected_rows ? true : false;
+        $this->db->query($sql);
+        return $this->db->affected_rows ? true : false;
     }
 
     /**
@@ -60,11 +62,11 @@ class DBmysqli extends DBDriver
      * @param $sql 要执行的sql语句
      * @return 执行语句所影响的记录数，为空返回0
      */
-    static public function GetCount($sql)
+    public function GetCount($sql)
     {
-        $sql = self::tablePR($sql);
+        $sql = $this->tablePR($sql);
 
-        $sth = self::$db->prepare($sql);
+        $sth = $this->db->prepare($sql);
         $sth->execute();
         $res = $sth->get_result();
         return $res->num_rows;
@@ -75,11 +77,11 @@ class DBmysqli extends DBDriver
      * @param $sql 要执行的查询select语句
      * @return 结果集数组
      */
-    static public function GetOne($sql)
+    public function GetOne($sql)
     {
-        $sql = self::tablePR($sql);
+        $sql = $this->tablePR($sql);
 
-        $sth = self::$db->prepare($sql);
+        $sth = $this->db->prepare($sql);
         $sth->execute();
         $res = $sth->get_result();
         return $res->num_rows ? $res->fetch_assoc() : array();
@@ -90,11 +92,11 @@ class DBmysqli extends DBDriver
      * @param $sql 要执行的查询select语句
      * @return 结果集数组
      */
-    static public function GetAll($sql)
+    public function GetAll($sql)
     {
-        $sql = self::tablePR($sql);
+        $sql = $this->tablePR($sql);
 
-        $sth = self::$db->prepare($sql);
+        $sth = $this->db->prepare($sql);
         $sth->execute();
         $res = $sth->get_result();
         // MYSQLI_ASSOC 以字段/值关联模式返回数据格式
@@ -106,9 +108,9 @@ class DBmysqli extends DBDriver
      * @param Null
      * @return id
      */
-    static public function GetInsertID()
+    public function GetInsertID()
     {
-        return self::$db->insert_id;
+        return $this->db->insert_id;
     }
 
     /************************************以上方法必须实现************************************/
@@ -121,7 +123,7 @@ class DBmysqli extends DBDriver
     {
         $this->_before_sql($options);
 
-        $main_table = $this->_union ? $this->_union : self::$_tbf.self::$_table;
+        $main_table = $this->_union ? $this->_union : $this->_tbf.$this->_table;
         $this->sql = "SELECT ".$this->_field." FROM ".$main_table." as a ".$this->_join.$this->_where.$this->_group.$this->_order.$this->_limit;
         
         $this->_after_sql();
@@ -138,7 +140,7 @@ class DBmysqli extends DBDriver
     {
         $this->_before_sql($options);
 
-        $main_table = $this->_union ? $this->_union : self::$_tbf.self::$_table;
+        $main_table = $this->_union ? $this->_union : $this->_tbf.$this->_table;
         $this->sql = "SELECT ".$this->_field." FROM ".$main_table." as a ".$this->_join.$this->_where.$this->_group.$this->_order.$this->_limit;
         
         $this->_after_sql();
@@ -154,7 +156,7 @@ class DBmysqli extends DBDriver
     {
         $this->_before_sql($options);
 
-        $main_table = $this->_union ? $this->_union : self::$_tbf.self::$_table;
+        $main_table = $this->_union ? $this->_union : $this->_tbf.$this->_table;
         $this->sql = "SELECT COUNT(".$this->_field.") as ResultRowCount FROM ".$main_table." as a ".$this->_join.$this->_where.$this->_group;
        
         $this->_after_sql();
@@ -189,7 +191,7 @@ class DBmysqli extends DBDriver
         }
         
         $this->_before_sql($options);
-        $this->sql = "UPDATE ".self::$_tbf.self::$_table." SET ".$ups.$this->_where;
+        $this->sql = "UPDATE ".$this->_tbf.$this->_table." SET ".$ups.$this->_where;
         $this->_after_sql();
         return $this->exec();
     }
@@ -200,7 +202,7 @@ class DBmysqli extends DBDriver
     public function delete($options=array())
     {
         $this->_before_sql($options);
-        $this->sql = "DELETE FROM ".self::$_tbf.self::$_table." ".$this->_where.$this->_order.$this->_limit;
+        $this->sql = "DELETE FROM ".$this->_tbf.$this->_table." ".$this->_where.$this->_order.$this->_limit;
         $this->_after_sql();
         return $this->exec($this->sql);
     }
@@ -214,8 +216,8 @@ class DBmysqli extends DBDriver
     {
         if (!$join) return $this;
         $joinArray = explode(" ", $join);
-        self::$_join_table = $joinArray[0] ? $joinArray[0] : $joinArray[1];
-        self::$_join_table = str_replace(self::$_tbf, '', self::$_join_table);
+        $this->_join_table = $joinArray[0] ? $joinArray[0] : $joinArray[1];
+        $this->_join_table = str_replace($this->_tbf, '', $this->_join_table);
 
         if (!$flag) {
             $join = ' LEFT JOIN '.$join.' ';
@@ -235,9 +237,9 @@ class DBmysqli extends DBDriver
     public function union($table=null)
     {
         if (!$table) return $this;
-        $_union_table = self::$_tbf.$table;
+        $_union_table = $this->_tbf.$table;
 
-        $this->_union = ' (SELECT * FROM '.self::$_tbf.self::$_table.' UNION ALL SELECT * FROM '.$_union_table.') ';
+        $this->_union = ' (SELECT * FROM '.$this->_tbf.$this->_table.' UNION ALL SELECT * FROM '.$_union_table.') ';
 
         return $this;
     }
@@ -349,10 +351,24 @@ class DBmysqli extends DBDriver
         if (is_array($field)) {
             foreach ($field as $k=>$v) {
                 $sep = $this->_order ? ' , ' : ' ';
-                $this->_order .= $sep.' '.$this->orm($k).' '.strtoupper($v).' ';
+                switch($k) {
+                    case "a.function":
+                        $this->_order .= $sep.' '.$v.'() ';
+                        break;
+                    default:
+                        $this->_order .= $sep.' '.$this->orm($k).' '.strtoupper($v).' ';
+                        break;
+                }
             }
         } else {
-            $this->_order = ' '.$this->orm($field).' '.strtoupper($way).' ';
+            switch($field) {
+                case "a.function":
+                    $this->_order = ' '.$way.'() ';
+                    break;
+                default:
+                    $this->_order = ' '.$this->orm($field).' '.strtoupper($way).' ';
+                    break;
+            }
         }
         $this->_order = ' ORDER BY '.$this->_order.' ';
 
@@ -391,7 +407,7 @@ class DBmysqli extends DBDriver
             }
         }
 
-        $this->sql = "SELECT ".$field.", MATCH(".$match.") AGAINST('".$value."' IN BOOLEAN MODE) AS score FROM ".self::$_tbf.self::$_table." WHERE MATCH(".$match.") AGAINST('".$value."' IN BOOLEAN MODE) ORDER BY score DESC ";
+        $this->sql = "SELECT ".$field.", MATCH(".$match.") AGAINST('".$value."' IN BOOLEAN MODE) AS score FROM ".$this->_tbf.$this->_table." WHERE MATCH(".$match.") AGAINST('".$value."' IN BOOLEAN MODE) ORDER BY score DESC ";
 
         return $this;
     }
@@ -399,20 +415,20 @@ class DBmysqli extends DBDriver
     /************************************mysqli事务处理************************************/
 
     //开始事务
-    static public function beginTransaction()
+    public function beginTransaction()
     {
-        self::$db->autocommit(FALSE);
+        $this->db->autocommit(FALSE);
     }
 
     //提交事务
-    static public function commitTransaction()
+    public function commitTransaction()
     {
-        self::$db->commit();
+        $this->db->commit();
     }
 
     //回滚事务
-    static public function rollBackTransaction()
+    public function rollBackTransaction()
     {
-        self::$db->rollback();
+        $this->db->rollback();
     }
 }

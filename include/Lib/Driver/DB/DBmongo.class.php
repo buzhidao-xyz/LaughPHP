@@ -44,7 +44,7 @@ class DBmongo extends DBDriver
     public $_command = null;
 
     //集合名
-    static public $_collection;
+    public $_collection;
 
     //调用父类初始化数据库连接
     public function __construct()
@@ -170,7 +170,7 @@ class DBmongo extends DBDriver
      */
     public function insert($data=array(),$flag=false)
     {
-        $this->_initMongoCollection(self::$_collection);
+        $this->_initMongoCollection($this->_collection);
 
         //单条文档和多条文档
         $return = array();
@@ -198,7 +198,7 @@ class DBmongo extends DBDriver
     public function update($data=array(),$options=array())
     {
         if (!is_array($data) || empty($data)) return false;
-        $this->_initMongoCollection(self::$_collection);
+        $this->_initMongoCollection($this->_collection);
 
         //如果没有匹配到文档 data禁止插入集合
         !isset($options['upsert']) ? $options['upsert'] = false : null;
@@ -218,7 +218,7 @@ class DBmongo extends DBDriver
     public function find($flag=true,$options=array())
     {
         if (!is_array($options)) return false;
-        $this->_initMongoCollection(self::$_collection);
+        $this->_initMongoCollection($this->_collection);
 
         //查询集合 返回MongoCursor
         $this->_dbmCursor = $flag===1 ? $this->_dbm->_dbmn->findOne($this->_query,$this->_field) : $this->_dbm->_dbmn->find($this->_query,$this->_field);
@@ -249,7 +249,7 @@ class DBmongo extends DBDriver
     public function remove($options=array())
     {
         if (!is_array($options)) return false;
-        $this->_initMongoCollection(self::$_collection);
+        $this->_initMongoCollection($this->_collection);
 
         //删除文档
         $result = $this->_dbm->_dbmn->remove($this->_query,$options);
@@ -264,7 +264,7 @@ class DBmongo extends DBDriver
     public function count($options=array())
     {
         if (!is_array($options)) return false;
-        $this->_initMongoCollection(self::$_collection);
+        $this->_initMongoCollection($this->_collection);
 
         //统计文档数
         $result = $this->_dbm->_dbmn->remove($this->_query,$this->_limit,$this->_skip);
@@ -279,7 +279,7 @@ class DBmongo extends DBDriver
     public function distinct($key=null)
     {
         if (!$key || !is_string($key)) return false;
-        $this->_initMongoCollection(self::$_collection);
+        $this->_initMongoCollection($this->_collection);
 
         $result = $this->_dbm->_dbmn->distinct($key,$this->_query);
 
@@ -298,7 +298,7 @@ class DBmongo extends DBDriver
     public function findAndModify($data=array(),$options=array())
     {
         if (!is_array($data) || empty($data)) return false;
-        $this->_initMongoCollection(self::$_collection);
+        $this->_initMongoCollection($this->_collection);
 
         //返回更新之后的文档内容
         !isset($options['new']) ? $options['new'] = true : null;
