@@ -38,7 +38,7 @@ class CommonControl extends BaseControl
     //获取用户权限信息
     public function getAdminAccess()
     {
-         $this->AdminAccess = session('LaughPHPAdminAccess');
+        $this->AdminAccess = session('AdminAccess');
     }
 
     //设置用户权限信息

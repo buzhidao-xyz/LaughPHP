@@ -14,6 +14,8 @@ $config = array(
 
     //session变量名混淆字符串
     'SESSION_ENCRYPT'      => 'imbzd',
+    //cookie变量名混淆字符串
+    'COOKIE_ENCRYPT'       => 'imbzd',
 
     'COMPILE_LIFE_TIME'    => 10, //编译文件有效时间 N秒
 

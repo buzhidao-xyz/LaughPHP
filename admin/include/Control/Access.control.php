@@ -44,7 +44,7 @@ class AccessControl extends BaseControl
 	 */
 	private function _getAdminAccess()
 	{
-        if (session('LaughPHPAdminAccess')) return true;
+        if (session('AdminAccess')) return true;
         session('superAdmin', $this->_superAdmin);
 
         $admin = $this->adminInfo;
@@ -70,7 +70,7 @@ class AccessControl extends BaseControl
         if (empty($group)) return true;
 
         $AdminAccess = $this->dealGroupNode($group, $node);
-        if (is_array($AdminAccess)) session('LaughPHPAdminAccess',$AdminAccess);
+        if (is_array($AdminAccess)) session('AdminAccess',$AdminAccess);
 
         return true;
 	}

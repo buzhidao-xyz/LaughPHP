@@ -20,7 +20,7 @@ class BaseControl
         if (!$this->_template) $this->_template = new Template();
         if (!$this->_system_model) $this->_system_model = new System();
 
-        $this->adminInfo = session('LaughPHPAdminInfo');
+        $this->adminInfo = session('AdminInfo');
 
         $this->getSys();
         $this->isLoged();

@@ -132,7 +132,7 @@ class LoginControl extends BaseControl
             'logincount' => $count,
             'ukey'      => $res['ukey']
         );
-		session('LaughPHPAdminInfo', $adminInfo);
+		session('AdminInfo', $adminInfo);
 		session('sstate', md5(md5($adminname).$res['ukey']));
 		session('ustate', $res['ustate']);
 
@@ -152,7 +152,7 @@ class LoginControl extends BaseControl
         if (session_id()) {
             session('ecode',null);
             session('vcode',null);
-            session('LaughPHPAdminInfo',null);
+            session('AdminInfo',null);
             session('sstate',null);
             session('ustate',null);
             session('AdminAccess',null);
