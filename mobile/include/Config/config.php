@@ -4,7 +4,7 @@
  */
 
 //定义子项目目录名
-define('PROJECT_PATH', 'admin');
+define('PROJECT_PATH', 'mobile');
 
 //定义子项目配置文件目录
 define('PROJECT_CONFIG_DIR',str_replace('\\', '/', dirname(__FILE__)));
@@ -14,7 +14,7 @@ $config_dir = str_replace('/'.PROJECT_PATH.'/include/Config', '', PROJECT_CONFIG
 require_once($config_dir.'/config.php');
 
 $project_config = array(
-    'STYLE_DEFAULT'        => PROJECT_DIR.'/themes/blue', //模板样式路径
+    'STYLE_DEFAULT'        => PROJECT_DIR.'/themes/default', //模板样式路径
 
     'INCLUDE_DIR'          => PROJECT_DIR.'/include',
     'CACHE_DIR'            => PROJECT_CACHE_DIR.'cache',
@@ -29,7 +29,7 @@ $project_config = array(
         'debug'            => false,
         'caching'          => false,
         'cache_lifetime'   => 120,
-        'template'         => PROJECT_DIR.'/themes/blue', //模板样式路径
+        'template'         => PROJECT_DIR.'/themes/default', //模板样式路径
         'template_compile' => PROJECT_CACHE_DIR.'cache/compile',
         'template_cache'   => PROJECT_CACHE_DIR.'cache/cache',
         'plugin_dir'       => ROOT_DIR.'/include/Vendor/Smarty/plugins',
