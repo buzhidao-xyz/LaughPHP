@@ -20,7 +20,7 @@ http://host/index.php?s=control/action&param=value
 control：逻辑控制器类名（首字母大写）
 action：类中的某个逻辑处理方法
 </pre>
-关于路由route：
+路由route：
 -------------
 	文件：route.php
 	作用：route文件主要是用来分析url请求，验证是否合法并且将合法请求解析成为系统框架能够识别并进行逻辑处理的参数列表
@@ -36,8 +36,38 @@ action：类中的某个逻辑处理方法
 	  }
 	}
 	说明：解析url之后，获得以上url解析结果，control即为将请求实例化的control类，action为要请求执行的类方法。
-关于config：
+
+参数配置config：
 -------------
+	文件：include/Config/config.php
+	说明：config文件分为几个文件，区分不同的功能配置单独存储，具体的每个config负责哪块配置，可查阅config.php文件，已有明确的注释说明，且每个config文件里也已作出注释说明。
+
+数据库配置：
+-------------
+	文件：include/Config/db. config.php
+	说明：具体的配置参数文件里已有注释，配置文件支持Mysql,SqlServer,MongoDB数据库
+
+数据库驱动：
+-------------
+	核心类库：include/Model/ DBDriver.model.php
+	分支驱动：include/Lib/Driver/DB
+	说明：框架原生支持Mysql,SqlServer,MongoDB三个数据库的数据ODBC驱动，具体的操作和使用方法参考下面的数据库IO驱动类说明文档
+	
+系统方法：
+-------------
+	文件：include/function.php和include/common.php
+	说明：框架内置了两个文件来加载系统的全局方法，这些方法无需额外再进行其他声明操作可直接使用，基本可满足平常的功能需求，具体的方法列表和使用说明请自行查看以上两个文件。
+
+框架文件结构：
+-------------
+<pre>
+index.php
+框架入口文件，且为唯一入口
+
+route.php
+框架路由文件，负责解析请求url并调用control和action
+
+</pre>
 
 <br />
 数据库IO驱动类
