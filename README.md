@@ -106,8 +106,8 @@ function where($where=array())
 	使用：T("user")->join(" ".TBF."user1 on b.sid=a.id ")->select();
 
 	function union($table=null)
-说明：多个表联合
-使用：T("user")->union("user1")->select();
+	说明：多个表联合
+	使用：T("user")->union("user1")->select();
 
 	function group($field=null)
 	说明：数据分组
