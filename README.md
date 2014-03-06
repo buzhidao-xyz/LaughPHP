@@ -1,39 +1,39 @@
 LaughPHP
 ========
-
-PHP框架
+一个PHP框架
 
 
 
 数据库IO驱动类
-
+-------------
 数据库驱动类
 基类：include/Model/DBDriver.model.php
 
 Mysql数据库驱动子类，PDO驱动
 include/Lib/Driver/DB/DBpdomysql.model.php
 
-驱动类使用方法：
+###驱动类使用方法：
 	用T("table")->function方式来调用
 	方法T：表示类对象加载哪张表
 	table：加载的表名
 
-类方法：
-基本增删改查操作方法：
-	function add($data,$m=false)
-	说明：向数据库添加数据
-	$data为数组,$m默认为false，单条数据插入，如果同时插入多条数据，$data参数值为二维数组，$m参数值设为true
-	用例：向user表插入数据,account为user表的一个字段
-	单条数据插入
-	$data = array('account'=>'testuser');
-	T("user")->add($data);
-	多条数据插入
-	$data = array(
-		array('account'=>'testuser1'),
-		array('account'=>'testuser2'),
-		array('account'=>'testuser3'),
-	);
-	T("user")->add($data,true);
+###类方法：<br />
+####基本增删改查操作方法：
+<pre>
+function add($data,$m=false)
+说明：向数据库添加数据
+$data为数组,$m默认为false，单条数据插入，如果同时插入多条数据，$data参数值为二维数组，$m参数值设为true
+用例：向user表插入数据,account为user表的一个字段
+单条数据插入
+$data = array('account'=>'testuser');
+T("user")->add($data);
+多条数据插入
+$data = array(
+	array('account'=>'testuser1'),
+	array('account'=>'testuser2'),
+	array('account'=>'testuser3'),
+);
+T("user")->add($data,true);
 
 function find()
 说明：查询单条数据，确定查询的返回结果集只有一条数据
@@ -73,8 +73,10 @@ T("user")->where(array("id"=>1))->delete();
 function count()
 说明：返回结果集数据条数 整形数值
 使用：T("user")->count();
+</pre>
 
-条件方法：
+####条件方法：
+<pre>
 function where($where=array())
 说明：where条件方法，$where参数为数组，数组key为表字段，value为查询条件值
 	$where= array(
@@ -112,11 +114,13 @@ function where($where=array())
 	function group($field=null)
 	说明：数据分组
 	使用：T("user")->group("class")->select();
+</pre>
 
-可直接执行SQL语句的方法：
-	function exec($sql)
-	说明：直接执行一条sql语句，可执行的sql语句类型为insert/delete/update
-	使用：T("user")->exec("insert into user(account) values('testuser')");
+####可直接执行SQL语句的方法：
+<pre>
+function exec($sql)
+说明：直接执行一条sql语句，可执行的sql语句类型为insert/delete/update
+使用：T("user")->exec("insert into user(account) values('testuser')");
 
 function GetOne($sql)
 说明：获取某条数据记录 $sql即为要执行的sql语句
@@ -127,11 +131,13 @@ function GetAll($sql)
 说明：获取多条数据记录
 使用：获取全部用户
 T("user")->GetAll("select * from user");
+</pre>
 
-使用说明：
-	系统框架初始化时已将启用的数据库驱动初始化，所以数据库驱动无需再进行实例化，可直接用T("table")调用数据库驱动类库的方法
+####使用说明：
+######系统框架初始化时已将启用的数据库驱动初始化，所以数据库驱动无需再进行实例化，可直接用T("table")调用数据库驱动类库的方法
 
-用例说明：
+####用例说明：
+<pre>
 1、查询用户表(user)里所有的用户信息
 $data = T("user")->select();
 2、查询user表id=1的用户信息
@@ -146,5 +152,6 @@ T("user")->join(" ".TBF."userinfo on b.userid=a.id ")
 		 ->field("a.account,a.age,b.birthday,b.score")
 		 ->where(array("a.account"=>array("like","%test%")))
 		 ->order(array("age"=>"desc"))->limit(5,10)->select();
+</pre>
 
 
