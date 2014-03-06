@@ -14,14 +14,12 @@ require("include/Config/config.php");
 require("route.php");
 new Route();
 </pre>
-<br />
 本框架遵循如下url请求规范：
 <pre>
-http://host/index.php?s=control/action
+http://host/index.php?s=control/action&param=value
 control：逻辑控制器类名（首字母大写）
 action：类中的某个逻辑处理方法
 </pre>
-<br />
 关于路由route：
 -------------
 	文件：route.php
@@ -37,8 +35,9 @@ action：类中的某个逻辑处理方法
 	    ["pagesize"] => string(2) "30"
 	  }
 	}
-	说明：
-
+	说明：解析url之后，获得以上url解析结果，control即为将请求实例化的control类，action为要请求执行的类方法。
+关于config：
+-------------
 
 <br />
 数据库IO驱动类
