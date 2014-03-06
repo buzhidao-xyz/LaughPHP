@@ -6,6 +6,7 @@ PHP框架
 
 
 数据库IO驱动类
+
 数据库驱动类
 基类：include/Model/DBDriver.model.php
 
@@ -21,18 +22,18 @@ include/Lib/Driver/DB/DBpdomysql.model.php
 基本增删改查操作方法：
 	function add($data,$m=false)
 	说明：向数据库添加数据
-$data为数组,$m默认为false，单条数据插入，如果同时插入多条数据，$data参数值为二维数组，$m参数值设为true
+	$data为数组,$m默认为false，单条数据插入，如果同时插入多条数据，$data参数值为二维数组，$m参数值设为true
 	用例：向user表插入数据,account为user表的一个字段
 	单条数据插入
-$data = array('account'=>'testuser');
-T("user")->add($data);
-多条数据插入
-$data = array(
-array('account'=>'testuser1'),
-array('account'=>'testuser2'),
-array('account'=>'testuser3'),
-);
-T("user")->add($data,true);
+	$data = array('account'=>'testuser');
+	T("user")->add($data);
+	多条数据插入
+	$data = array(
+		array('account'=>'testuser1'),
+		array('account'=>'testuser2'),
+		array('account'=>'testuser3'),
+	);
+	T("user")->add($data,true);
 
 function find()
 说明：查询单条数据，确定查询的返回结果集只有一条数据
@@ -76,9 +77,9 @@ function count()
 条件方法：
 function where($where=array())
 说明：where条件方法，$where参数为数组，数组key为表字段，value为查询条件值
-	  $where= array(
-"account"=>"testuser" //表示查询account等于testuser的记录
-);
+	$where= array(
+		"account"=>"testuser" //表示查询account等于testuser的记录
+	);
 	可支持where条件(neq等)
 	neq: 不等于 "account"=>array("neq","testuser")
 	lt: 小于 "account"=>array("lt","testuser")
@@ -86,11 +87,11 @@ function where($where=array())
 	elt: 小于等于 "account"=>array("elt","testuser")
 	egt: 大于等于 "account"=>array("egt","testuser")
 	in: 在哪些值中 "account"=>array("in",array("testuser1","testuser2"…))
-like: 模糊查询 "account"=>array("like","%testuser%")
-between: 区间 "account"=>array("between",1,10)
-用例：
-查询用户表(user)中account有test的用户
-T("user")->where(array("account"=>array("like","%test%")))->select();
+	like: 模糊查询 "account"=>array("like","%testuser%")
+	between: 区间 "account"=>array("between",1,10)
+	用例：
+	查询用户表(user)中account有test的用户
+	T("user")->where(array("account"=>array("like","%test%")))->select();
 
 	function order($order=null)
 	说明：数据排序，order参数为数组，array("id"=>"desc")，id为字段名，desc排序方式
@@ -131,8 +132,8 @@ T("user")->GetAll("select * from user");
 	系统框架初始化时已将启用的数据库驱动初始化，所以数据库驱动无需再进行实例化，可直接用T("table")调用数据库驱动类库的方法
 
 用例说明：
-	1、查询用户表(user)里所有的用户信息
-	$data = T("user")->select();
+1、查询用户表(user)里所有的用户信息
+$data = T("user")->select();
 2、查询user表id=1的用户信息
 $data = T("user")->where(array("id"=>1))->find();
 3、查询年龄10-20岁的用户数量
