@@ -4,14 +4,14 @@ LaughPHP
 
 <br />
 本框架采用单入口模式，主入口文件index.php，index.php只执行两个逻辑，加载config文件，加载route文件
-<pre><code>
+<pre>
 //引入配置文件
 require("include/Config/config.php");
 
 //引入路由器
 require("route.php");
 new Route();
-</code></pre>
+</pre>
 <br />
 <br />
 
