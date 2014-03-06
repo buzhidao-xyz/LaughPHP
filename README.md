@@ -3,6 +3,8 @@ LaughPHP
 一个PHP框架
 
 <br />
+本框架严格遵循MVC三层结构，将数据模型（model）、逻辑控制（control）、视图（view）三层分离
+<br />
 本框架采用单入口模式，主入口文件index.php，index.php只执行两个逻辑，加载config文件，加载route文件
 <pre>
 //引入配置文件
@@ -13,9 +15,32 @@ require("route.php");
 new Route();
 </pre>
 <br />
+本框架遵循如下url请求规范：
+<pre>
+http://host/index.php?s=control/action
+control：逻辑控制器类名（首字母大写）
+action：类中的某个逻辑处理方法
+</pre>
 <br />
+关于路由route：
+-------------
+	文件：route.php
+	作用：route文件主要是用来分析url请求，验证是否合法并且将合法请求解析成为系统框架能够识别并进行逻辑处理的参数列表
+	url规范：$url = '#^http://[0-9a-z.:-]+/('.__SELF__.'/)?(index\.php)?(\?(s=.+)?)?$#i';
+	参数解析结果：
+	array(3) {
+	  ["control"] => string(5) "Login"
+	  ["action"] => string(6) "logout"
+	  ["string"] => array(3) {
+	    ["id"] => string(1) "1"
+	    ["page"] => string(1) "1"
+	    ["pagesize"] => string(2) "30"
+	  }
+	}
+	说明：
 
 
+<br />
 数据库IO驱动类
 -------------
 数据库驱动类
