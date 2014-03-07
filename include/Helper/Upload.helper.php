@@ -401,11 +401,14 @@ class UploadHelper
         foreach($files as $key => $file) {
             //过滤无效的上传
             if(!empty($file['name'])) {
+                $savename = $this->getSaveName($file);
+                $subpath = substr($savename,0,strrpos($savename,'/')).'/';
+
                 //登记上传文件的扩展信息
-                $file['key']          =  $key;
+                $file['key']        = $key;
                 $file['extension']  = $this->getExt($file['name']);
-                $file['savepath']   = $savePath;
-                $file['savename']   = $this->getSaveName($file);
+                $file['savepath']   = $savePath.$subpath;
+                $file['savename']   = str_replace($subpath,'',$savename);
 
                 // 自动检查附件
                 if($this->autoCheck) {
@@ -476,10 +479,13 @@ class UploadHelper
             }
             $info =  array();
             foreach ($fileArray as $key=>$file){
+                $savename = $this->getSaveName($file);
+                $subpath = substr($savename,0,strrpos($savename,'/')).'/';
+
                 //登记上传文件的扩展信息
                 $file['extension']  = $this->getExt($file['name']);
-                $file['savepath']   = $savePath;
-                $file['savename']   = $this->getSaveName($file);
+                $file['savepath']   = $savePath.$subpath;
+                $file['savename']   = str_replace($subpath,'',$savename);
                 // 自动检查附件
                 if($this->autoCheck) {
                     if(!$this->check($file))
@@ -502,9 +508,9 @@ class UploadHelper
         }
     }
 
-    public function uploadContent($field="content",$code="base64")
+    public function uploadContent($field="content",$content=null,$code="base64")
     {
-        $content = $_POST[$field];
+        !$content ? $content = $_POST[$field] : null;
         if ($code == "base64") {
             return $this->base64ToImage($content);
         }
@@ -517,17 +523,23 @@ class UploadHelper
         }
         
         $img = base64_decode($base64Data);
-        $this->fileName = time() . "_" . getRandStrs(6,2) . "_" . rand(1 , 10000) . ".png";
-        $this->fullName = $this->savePath . '/' . $this->fileName;
-        if (!file_put_contents($this->fullName, $img)) {
+
+        $file = array();
+        $name = getRandStrs(6,2).".jpg";
+        $file['name'] = $name;
+        $file['savepath'] = $this->savePath;
+        $savename = $this->getSaveName($file);
+        $subpath = substr($savename,0,strrpos($savename,'/')).'/';
+
+        $imageFile = $this->savePath . '/' . $savename;
+        if (!file_put_contents($imageFile, $img)) {
             $this->error(7);
             return false;
         }
-        $this->uploadFileInfo['savepath'] = $this->savePath;
-        $this->uploadFileInfo['savename'] = $this->fileName;
-        $this->uploadFileInfo['name'] = $this->fileName;
+        $this->uploadFileInfo['savepath'] = $this->savePath.$subpath;
+        $this->uploadFileInfo['savename'] = str_replace($subpath,'',$savename);
         $this->uploadFileInfo['size'] = strlen($img);
-        $this->uploadFileInfo['extension'] = ".png";
+        $this->uploadFileInfo['extension'] = "jpg";
         return true;
     }
 
@@ -703,7 +715,7 @@ class UploadHelper
                 $name = md5($file['savename']);
                 $dir   =  '';
                 for($i=0;$i<$this->hashLevel;$i++) {
-                    $dir   .=  $name{$i}.'/';
+                    $dir = $dir ? $dir.'/'.$name{$i} : $name{$i};
                 }
                 break;
         }

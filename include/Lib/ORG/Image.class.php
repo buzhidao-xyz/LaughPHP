@@ -213,7 +213,7 @@ class Image
 
             // 生成图片
             $imageFun = 'image' . ($type == 'jpg' ? 'jpeg' : $type);
-            $imageFun($thumbImg, $thumbname);
+            $imageFun == 'imagejpeg' ? $imageFun($thumbImg, $thumbname, 100) : $imageFun($thumbImg, $thumbname);
             imagedestroy($thumbImg);
             imagedestroy($srcImg);
             return $thumbname;

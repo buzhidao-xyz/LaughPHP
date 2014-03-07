@@ -293,7 +293,7 @@ class DBpdomysql extends DBDriver
                             if (strpos($k, "a.")!==false) $whereArray0[] = $w;
                             break;
                         case 'like':
-                            $w = " ".$this->orm($k)." LIKE '%".$v[1]."%' ";
+                            $w = " ".$this->orm($k)." LIKE '".$v[1]."' ";
                             $whereArray[] = $w;
                             if (strpos($k, "a.")!==false) $whereArray0[] = $w;
                             break;
