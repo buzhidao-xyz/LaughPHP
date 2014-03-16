@@ -401,6 +401,8 @@ class UploadHelper
         foreach($files as $key => $file) {
             //过滤无效的上传
             if(!empty($file['name'])) {
+                $file['savepath']   = $savePath;
+
                 $savename = $this->getSaveName($file);
                 $subpath = substr($savename,0,strrpos($savename,'/')).'/';
 
@@ -479,6 +481,8 @@ class UploadHelper
             }
             $info =  array();
             foreach ($fileArray as $key=>$file){
+                $file['savepath']   = $savePath;
+
                 $savename = $this->getSaveName($file);
                 $subpath = substr($savename,0,strrpos($savename,'/')).'/';
 
