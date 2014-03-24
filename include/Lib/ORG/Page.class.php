@@ -116,6 +116,7 @@ class Page {
                 $result['page'][$page] = '';
             }
         }
+        $result['nowpage'] = $this->nowPage;
         $result['totalpage'] = $this->totalPages;
         return $result;
     }
@@ -182,6 +183,7 @@ class Page {
     	for($i=$newparr[0];$i<=$newparr[count($newparr)-1];$i++){
 	        $result['page'][$i] = ($i!=$this->nowPage) ? ($url.$p."=".$i) : '';
 	    }
+        $result['nowpage'] = $this->nowPage;
 	    $result['totalpage'] = $this->totalPages;
         if ($this->_header_need) header("location:".$result['endpage']['href']);
        	return $result;

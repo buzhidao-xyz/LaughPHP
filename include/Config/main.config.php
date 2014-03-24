@@ -36,4 +36,7 @@ $config = array(
 
     //SAE静态JS/CSS/IMAGE文件服务器HOST地址
     'STATIC_FILE_HOST' => IS_SAE ? 'http://imbzd.sinaapp.com/' : __APP__."/",
+
+    //Image图片服务器HOST地址
+    'IMAGE_HOST' => 'http://localhost:83',
 );
