@@ -671,3 +671,36 @@ function httpType($site=null)
 
     return $flag ? $site : "http://".$site;
 }
+
+//计算几秒前、几分钟前、几小时前、几天前
+function durtime($the_time=null){
+    $now_time = date("Y-m-d H:i:s",TIMESTAMP);
+    $now_time = strtotime($now_time);
+    $show_time = strtotime($the_time);
+    $dur = $now_time - $show_time;
+    if ($dur < 0) {
+        return $time;
+    } else {
+        if ($dur < 10) {
+            return '刚刚';
+        } else {
+            if ($dur < 60) {//一分钟内
+                return $dur.'秒前';
+            } else {
+                if ($dur < 3600) {//一小时内
+                    return floor($dur/60).'分钟前';
+                } else {
+                    if ($dur < 86400) {//一天内
+                        return floor($dur/3600).'小时前';
+                    } else {
+                        if ($dur < 2592000) {//三十天内
+                            return floor($dur/86400).'天前';
+                        } else {
+                            return $the_time;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
