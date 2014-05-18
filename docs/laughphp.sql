@@ -2,15 +2,15 @@
 Navicat MySQL Data Transfer
 
 Source Server         : localhost
-Source Server Version : 50528
+Source Server Version : 50530
 Source Host           : localhost:3306
 Source Database       : laughphp
 
 Target Server Type    : MYSQL
-Target Server Version : 50528
+Target Server Version : 50530
 File Encoding         : 65001
 
-Date: 2014-01-13 15:22:40
+Date: 2014-05-18 09:59:21
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -28,7 +28,7 @@ CREATE TABLE `la_admin` (
   `ustate` varchar(32) NOT NULL DEFAULT '' COMMENT '登录状态码',
   `lastlogintime` int(10) DEFAULT '0',
   `lastloginip` int(11) DEFAULT '0',
-  `logincount` tinyint(6) NOT NULL DEFAULT '0',
+  `logincount` int(10) NOT NULL DEFAULT '0',
   `super` tinyint(1) DEFAULT '0' COMMENT '是否超级管理员0否1是',
   `createtime` int(10) NOT NULL DEFAULT '0',
   `updatetime` int(10) DEFAULT '0' COMMENT '更新时间',

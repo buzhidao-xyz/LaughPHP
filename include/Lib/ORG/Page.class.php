@@ -131,7 +131,7 @@ class Page {
         $this->rollPage = 11;
         $nowCoolPage = ceil($this->nowPage/$this->rollPage);
         $parameter = '';
-        if (is_array($parameter)) {
+        if (is_array($this->parameter)) {
             foreach ($this->parameter as $k=>$v) {
                 $parameter .= '&'.$k.'='.$v;
             }

@@ -61,18 +61,18 @@ $db_config = array(
 	 * 同时option里的replicaSet值要设置为1
 	 * 关于mongo验证 如果启用账户密码验证 需要为laughphp数据库添加新的系统用户 system.users集合
 	 */
-	'mongo' => array(
-		'dbtype'   => "mongo",
-		'host'     => '127.0.0.1',
-		'port'     => '27017',
-		'username' => 'root',
-		'password' => '123456',
-		'database' => 'laughphp',
-		'option'   => array(
-			'authentication' => false, //是否启用mongo验证 默认不启用
-			'connect' => true,
-			'replicaSet' => 0, //是否副本集模式 0否 1是
-			'replicaSetFlag' => 'PowerHouseReplica' //如果是副本集模式 此处填写副本集名称
-		)
-	)
+	// 'mongo' => array(
+	// 	'dbtype'   => "mongo",
+	// 	'host'     => '127.0.0.1',
+	// 	'port'     => '27017',
+	// 	'username' => 'root',
+	// 	'password' => '123456',
+	// 	'database' => 'laughphp',
+	// 	'option'   => array(
+	// 		'authentication' => false, //是否启用mongo验证 默认不启用
+	// 		'connect' => true,
+	// 		'replicaSet' => 0, //是否副本集模式 0否 1是
+	// 		'replicaSetFlag' => 'PowerHouseReplica' //如果是副本集模式 此处填写副本集名称
+	// 	)
+	// )
 );
