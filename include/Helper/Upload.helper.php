@@ -404,7 +404,8 @@ class UploadHelper
                 $file['savepath']   = $savePath;
 
                 $savename = $this->getSaveName($file);
-                $subpath = substr($savename,0,strrpos($savename,'/')).'/';
+                $subpath = substr($savename,0,strrpos($savename,'/'));
+                $subpath .= $subpath ? '/' : null;
 
                 //登记上传文件的扩展信息
                 $file['key']        = $key;
@@ -484,7 +485,8 @@ class UploadHelper
                 $file['savepath']   = $savePath;
 
                 $savename = $this->getSaveName($file);
-                $subpath = substr($savename,0,strrpos($savename,'/')).'/';
+                $subpath = substr($savename,0,strrpos($savename,'/'));
+                $subpath .= $subpath ? '/' : null;
 
                 //登记上传文件的扩展信息
                 $file['extension']  = $this->getExt($file['name']);
@@ -533,7 +535,8 @@ class UploadHelper
         $file['name'] = $name;
         $file['savepath'] = $this->savePath;
         $savename = $this->getSaveName($file);
-        $subpath = substr($savename,0,strrpos($savename,'/')).'/';
+        $subpath = substr($savename,0,strrpos($savename,'/'));
+        $subpath .= $subpath ? '/' : null;
 
         $imageFile = $this->savePath . '/' . $savename;
         if (!file_put_contents($imageFile, $img)) {

@@ -48,6 +48,19 @@ class Group extends Base
 
 	/**
 	 * 根据组名称获取组信息
+	 * @param $title string 组名称
+	 */
+	public function getGroupByTitle($id=null,$title=null)
+	{
+		if (!$title) return false;
+
+		$count = T('group')->where(array("title"=>$title))->count();
+
+		return $count;
+	}
+
+	/**
+	 * 根据组ID和组名称获取组信息
 	 * @param $id int 组ID
 	 * @param $title string 组名称
 	 */
